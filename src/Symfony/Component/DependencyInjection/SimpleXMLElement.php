@@ -41,7 +41,7 @@ class SimpleXMLElement extends \SimpleXMLElement
      *
      * @return mixed
      */
-    public function getArgumentsAsPhp($name, $lowercase = true)
+    public function getArgumentsAsPhp($name, $lowercase = true, $parsePrivates = false)
     {
         $arguments = array();
         foreach ($this->$name as $arg) {
@@ -49,6 +49,17 @@ class SimpleXMLElement extends \SimpleXMLElement
                 $arg['key'] = (string) $arg['name'];
             }
             $key = isset($arg['key']) ? (string) $arg['key'] : (!$arguments ? 0 : max(array_keys($arguments)) + 1);
+
+            $isPublic = true;
+            if (isset($arg['public']) && !((bool) self::phpize($arg['public']))) {
+                $isPublic = false;
+            }
+
+            if (!$parsePrivates && !$isPublic) {
+                continue;
+            } elseif ($parsePrivates && $isPublic) {
+                continue;
+            }
 
             // parameter keys are case insensitive
             if ('parameter' == $name && $lowercase) {

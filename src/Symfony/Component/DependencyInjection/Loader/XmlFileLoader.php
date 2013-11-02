@@ -84,7 +84,7 @@ class XmlFileLoader extends FileLoader
         if (!$xml->parameters) {
             return;
         }
-
+//var_dump($xml->parameters->getArgumentsAsPhp('parameter'));
         $this->container->getParameterBag()->add($xml->parameters->getArgumentsAsPhp('parameter'));
     }
 

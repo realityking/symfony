@@ -117,6 +117,7 @@
     <xsd:attribute name="id" type="xsd:string" />
     <xsd:attribute name="key" type="xsd:string" />
     <xsd:attribute name="on-invalid" type="invalid_sequence" />
+    <xsd:attribute name="public" type="boolean" />
   </xsd:complexType>
 
   <xsd:complexType name="property" mixed="true">

@@ -86,6 +86,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Symfony\\Component\\DependencyInjection\\SimpleXMLElement', get_class($xml), '->parseFile() returns an SimpleXMLElement object');
     }
 
+    /**
+     * @group rouven
+     */
     public function testLoadParameters()
     {
         $container = new ContainerBuilder();
