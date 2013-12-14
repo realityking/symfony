@@ -19,13 +19,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  * that use decision voters.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated since 2.5, to be removed in 3.0. Use the AccessDecisionManager for the chosen strategy instead.
  */
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
-    private $voters;
     private $strategy;
-    private $allowIfAllAbstainDecisions;
-    private $allowIfEqualGrantedDeniedDecisions;
 
     /**
      * Constructor.
@@ -39,19 +38,12 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      */
     public function __construct(array $voters, $strategy = 'affirmative', $allowIfAllAbstainDecisions = false, $allowIfEqualGrantedDeniedDecisions = true)
     {
-        if (!$voters) {
-            throw new \InvalidArgumentException('You must at least add one voter.');
-        }
-
-        $strategyMethod = 'decide'.ucfirst($strategy);
-        if (!is_callable(array($this, $strategyMethod))) {
+        $strategyClass = 'Symfony\\Component\\Security\\Core\\Authorization\\'.ucfirst($strategy).'AccessDecisionManager';
+        if (!class_exists($strategyClass)) {
             throw new \InvalidArgumentException(sprintf('The strategy "%s" is not supported.', $strategy));
         }
 
-        $this->voters = $voters;
-        $this->strategy = $strategyMethod;
-        $this->allowIfAllAbstainDecisions = (Boolean) $allowIfAllAbstainDecisions;
-        $this->allowIfEqualGrantedDeniedDecisions = (Boolean) $allowIfEqualGrantedDeniedDecisions;
+        $this->strategy = new $strategyClass($voters, $allowIfAllAbstainDecisions, $allowIfEqualGrantedDeniedDecisions);
     }
 
     /**
@@ -59,7 +51,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      */
     public function decide(TokenInterface $token, array $attributes, $object = null)
     {
-        return $this->{$this->strategy}($token, $attributes, $object);
+        return $this->strategy->decide($token, $attributes, $object);
     }
 
     /**
@@ -67,13 +59,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      */
     public function supportsAttribute($attribute)
     {
-        foreach ($this->voters as $voter) {
-            if ($voter->supportsAttribute($attribute)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->strategy->supportsAttribute($attribute);
     }
 
     /**
@@ -81,135 +67,6 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
      */
     public function supportsClass($class)
     {
-        foreach ($this->voters as $voter) {
-            if ($voter->supportsClass($class)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Grants access if any voter returns an affirmative response.
-     *
-     * If all voters abstained from voting, the decision will be based on the
-     * allowIfAllAbstainDecisions property value (defaults to false).
-     */
-    private function decideAffirmative(TokenInterface $token, array $attributes, $object = null)
-    {
-        $deny = 0;
-        foreach ($this->voters as $voter) {
-            $result = $voter->vote($token, $object, $attributes);
-            switch ($result) {
-                case VoterInterface::ACCESS_GRANTED:
-                    return true;
-
-                case VoterInterface::ACCESS_DENIED:
-                    ++$deny;
-
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        if ($deny > 0) {
-            return false;
-        }
-
-        return $this->allowIfAllAbstainDecisions;
-    }
-
-    /**
-     * Grants access if there is consensus of granted against denied responses.
-     *
-     * Consensus means majority-rule (ignoring abstains) rather than unanimous
-     * agreement (ignoring abstains). If you require unanimity, see
-     * UnanimousBased.
-     *
-     * If there were an equal number of grant and deny votes, the decision will
-     * be based on the allowIfEqualGrantedDeniedDecisions property value
-     * (defaults to true).
-     *
-     * If all voters abstained from voting, the decision will be based on the
-     * allowIfAllAbstainDecisions property value (defaults to false).
-     */
-    private function decideConsensus(TokenInterface $token, array $attributes, $object = null)
-    {
-        $grant = 0;
-        $deny = 0;
-        $abstain = 0;
-        foreach ($this->voters as $voter) {
-            $result = $voter->vote($token, $object, $attributes);
-
-            switch ($result) {
-                case VoterInterface::ACCESS_GRANTED:
-                    ++$grant;
-
-                    break;
-
-                case VoterInterface::ACCESS_DENIED:
-                    ++$deny;
-
-                    break;
-
-                default:
-                    ++$abstain;
-
-                    break;
-            }
-        }
-
-        if ($grant > $deny) {
-            return true;
-        }
-
-        if ($deny > $grant) {
-            return false;
-        }
-
-        if ($grant == $deny && $grant != 0) {
-            return $this->allowIfEqualGrantedDeniedDecisions;
-        }
-
-        return $this->allowIfAllAbstainDecisions;
-    }
-
-    /**
-     * Grants access if only grant (or abstain) votes were received.
-     *
-     * If all voters abstained from voting, the decision will be based on the
-     * allowIfAllAbstainDecisions property value (defaults to false).
-     */
-    private function decideUnanimous(TokenInterface $token, array $attributes, $object = null)
-    {
-        $grant = 0;
-        foreach ($attributes as $attribute) {
-            foreach ($this->voters as $voter) {
-                $result = $voter->vote($token, $object, array($attribute));
-
-                switch ($result) {
-                    case VoterInterface::ACCESS_GRANTED:
-                        ++$grant;
-
-                        break;
-
-                    case VoterInterface::ACCESS_DENIED:
-                        return false;
-
-                    default:
-                        break;
-                }
-            }
-        }
-
-        // no deny votes
-        if ($grant > 0) {
-            return true;
-        }
-
-        return $this->allowIfAllAbstainDecisions;
+        return $this->strategy->supportsClass($class);
     }
 }

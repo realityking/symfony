@@ -70,15 +70,10 @@ class SecurityExtension extends Extension
         $container->setParameter('security.access.denied_url', $config['access_denied_url']);
         $container->setParameter('security.authentication.manager.erase_credentials', $config['erase_credentials']);
         $container->setParameter('security.authentication.session_strategy.strategy', $config['session_fixation_strategy']);
-        $container
-            ->getDefinition('security.access.decision_manager')
-            ->addArgument($config['access_decision_manager']['strategy'])
-            ->addArgument($config['access_decision_manager']['allow_if_all_abstain'])
-            ->addArgument($config['access_decision_manager']['allow_if_equal_granted_denied'])
-        ;
         $container->setParameter('security.access.always_authenticate_before_granting', $config['always_authenticate_before_granting']);
         $container->setParameter('security.authentication.hide_user_not_found', $config['hide_user_not_found']);
 
+        $this->createAccessDecisionManager($config, $container);
         $this->createFirewalls($config, $container);
         $this->createAuthorization($config, $container);
         $this->createRoleHierarchy($config, $container);
@@ -98,7 +93,7 @@ class SecurityExtension extends Extension
             'Symfony\\Component\\Security\\Core\\SecurityContext',
             'Symfony\\Component\\Security\\Core\\User\\UserProviderInterface',
             'Symfony\\Component\\Security\\Core\\Authentication\\AuthenticationProviderManager',
-            'Symfony\\Component\\Security\\Core\\Authorization\\AccessDecisionManager',
+            'Symfony\\Component\\Security\\Core\\Authorization\\AccessDecisionManagerInterface',
             'Symfony\\Component\\Security\\Core\\Authorization\\Voter\\VoterInterface',
             'Symfony\\Bundle\\SecurityBundle\\Security\\FirewallMap',
             'Symfony\\Bundle\\SecurityBundle\\Security\\FirewallContext',
@@ -197,6 +192,16 @@ class SecurityExtension extends Extension
 
             $container->getDefinition('security.access_map')
                       ->addMethodCall('add', array($matcher, $attributes, $access['requires_channel']));
+        }
+    }
+
+    private function createAccessDecisionManager($config, ContainerBuilder $container)
+    {
+        $accessDecisionManager = $container->getDefinition('security.access.decision_manager.' . $config['access_decision_manager']['strategy']);
+
+        $accessDecisionManager->addArgument($config['access_decision_manager']['allow_if_all_abstain']);
+        if ($config['access_decision_manager']['strategy'] !== 'unanimous') {
+            $accessDecisionManager->addArgument($config['access_decision_manager']['allow_if_equal_granted_denied']);
         }
     }
 
