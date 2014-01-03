@@ -22,39 +22,17 @@ use Symfony\Component\Finder\Finder;
  * @author Marc Weistroff <marc.weistroff@sensiolabs.com>
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
  */
-class LintCommand extends Command
+abstract class LintCommand extends Command
 {
-    private $twig;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct($name = 'twig:lint')
-    {
-        parent::__construct($name);
-    }
-
-    /**
-     * Sets the twig environment
-     *
-     * @param \Twig_Environment $twig
-     */
-    public function setTwigEnvironment(\Twig_Environment $twig)
-    {
-        $this->twig = $twig;
-    }
-
     /**
      * @return \Twig_Environment $twig
      */
-    protected function getTwigEnvironment()
-    {
-        return $this->twig;
-    }
+    abstract protected function getTwigEnvironment();
 
     protected function configure()
     {
         $this
+            ->setName('twig:lint')
             ->setDescription('Lints a template and outputs encountered errors')
             ->addArgument('filename')
             ->setHelp(<<<EOF
@@ -108,13 +86,15 @@ EOF
 
     protected function findFiles($filename)
     {
+        if (!is_readable($filename)) {
+        	throw new \RuntimeException(sprintf('File or directory "%s" is not readable', $filename));
+        }
+        
         if (is_file($filename)) {
             return array($filename);
         } elseif (is_dir($filename)) {
             return Finder::create()->files()->in($filename)->name('*.twig');
-        }
-
-        throw new \RuntimeException(sprintf('File or directory "%s" is not readable', $filename));
+        }   
     }
 
     protected function validateTemplate(\Twig_Environment $twig, OutputInterface $output, $template, $file = null)
