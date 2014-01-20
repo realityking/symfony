@@ -104,7 +104,13 @@ class Controller extends ContainerAware
      */
     public function render($view, array $parameters = array(), Response $response = null)
     {
-        return $this->container->get('templating')->renderResponse($view, $parameters, $response);
+        if (null === $response) {
+            $response = new Response();
+        }
+
+        $response->setContent($this->container->get('templating')->render($view, $parameters));
+
+        return $response;
     }
 
     /**

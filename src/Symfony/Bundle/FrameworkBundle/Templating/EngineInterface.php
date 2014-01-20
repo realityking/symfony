@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  * EngineInterface is the interface each engine must implement.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated since 2.5, to be removed in 3.0. Typehint against Symfony\Component\Templating\EngineInterface instead.
  */
 interface EngineInterface extends BaseEngineInterface
 {
@@ -31,6 +32,7 @@ interface EngineInterface extends BaseEngineInterface
      * @return Response A Response instance
      *
      * @throws \RuntimeException if the template cannot be rendered
+     * @deprecated since 2.5, to be removed in 3.0. Use $this->render() instead.
      */
     public function renderResponse($view, array $parameters = array(), Response $response = null);
 }

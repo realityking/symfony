@@ -33,8 +33,7 @@ class TemplateController extends ContainerAware
      */
     public function templateAction($template, $maxAge = null, $sharedAge = null, $private = null)
     {
-        /** @var $response \Symfony\Component\HttpFoundation\Response */
-        $response = $this->container->get('templating')->renderResponse($template);
+        $response = new Response($this->container->get('templating')->render($template));
 
         if ($maxAge) {
             $response->setMaxAge($maxAge);
