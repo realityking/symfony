@@ -290,68 +290,6 @@ class ModelChoiceList extends ObjectChoiceList
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForChoices(array $models)
-    {
-        if (empty($models)) {
-            return array();
-        }
-
-        $this->load();
-
-        $indices = array();
-
-        /*
-         * Overwriting default implementation.
-         *
-         * The two objects may represent the same entry in the database,
-         * but if they originated from different queries, there are not the same object within the code.
-         *
-         * This happens when using m:n relations with either sides model as data_class of the form.
-         * The choicelist will retrieve the list of available related models with a different query, resulting in different objects.
-         */
-        $choices = $this->fixChoices($models);
-        foreach ($choices as $i => $givenChoice) {
-            if (null === $givenChoice) {
-                continue;
-            }
-
-            foreach ($this->getChoices() as $j => $choice) {
-                if ($this->isEqual($choice, $givenChoice)) {
-                    $indices[$i] = $j;
-
-                    // If all choices have been assigned, skip further loops.
-                    unset($choices[$i]);
-                    if (0 === count($choices)) {
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        return $indices;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForValues(array $values)
-    {
-        if (empty($values)) {
-            return array();
-        }
-
-        $this->load();
-
-        return parent::getIndicesForValues($values);
-    }
-
-    /**
      * Creates a new unique index for this model.
      *
      * If the model has a single-field identifier, this identifier is used.
