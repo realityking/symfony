@@ -195,20 +195,6 @@ class Controller extends ContainerAware
     }
 
     /**
-     * Shortcut to return the request service.
-     *
-     * @return Request
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0. Ask
-     *             Symfony to inject the Request object into your controller
-     *             method instead by type hinting it in the method's signature.
-     */
-    public function getRequest()
-    {
-        return $this->container->get('request_stack')->getCurrentRequest();
-    }
-
-    /**
      * Shortcut to return the Doctrine Registry service.
      *
      * @return Registry

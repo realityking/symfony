@@ -28,19 +28,11 @@ class SessionHelper extends Helper
     /**
      * Constructor.
      *
-     * @param Request|RequestStack $requestStack A RequestStack instance or a Request instance
-     *
-     * @deprecated since 2.5, passing a Request instance is deprecated and support for it will be removed in 3.0
+     * @param RequestStack $requestStack A RequestStack instance
      */
-    public function __construct($requestStack)
+    public function __construct(RequestStack $requestStack)
     {
-        if ($requestStack instanceof Request) {
-            $this->session = $requestStack->getSession();
-        } elseif ($requestStack instanceof RequestStack) {
-            $this->requestStack = $requestStack;
-        } else {
-            throw new \InvalidArgumentException('RequestHelper only accepts a Request or a RequestStack instance.');
-        }
+       $this->requestStack = $requestStack;
     }
 
     /**

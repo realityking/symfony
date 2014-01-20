@@ -28,19 +28,11 @@ class RequestHelper extends Helper
     /**
      * Constructor.
      *
-     * @param Request|RequestStack $requestStack A RequestStack instance or a Request instance
-     *
-     * @deprecated since 2.5, passing a Request instance is deprecated and support for it will be removed in 3.0
+     * @param RequestStack $requestStack A RequestStack instance
      */
-    public function __construct($requestStack)
+    public function __construct(RequestStack $requestStack)
     {
-        if ($requestStack instanceof Request) {
-            $this->request = $requestStack;
-        } elseif ($requestStack instanceof RequestStack) {
-            $this->requestStack = $requestStack;
-        } else {
-            throw new \InvalidArgumentException('RequestHelper only accepts a Request or a RequestStack instance.');
-        }
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -70,15 +62,11 @@ class RequestHelper extends Helper
 
     private function getRequest()
     {
-        if ($this->requestStack) {
-            if (!$this->requestStack->getCurrentRequest()) {
-                throw new \LogicException('A Request must be available.');
-            }
-
-            return $this->requestStack->getCurrentRequest();
+        if (!$this->requestStack->getCurrentRequest()) {
+            throw new \LogicException('A Request must be available.');
         }
 
-        return $this->request;
+        return $this->requestStack->getCurrentRequest();
     }
 
     /**
