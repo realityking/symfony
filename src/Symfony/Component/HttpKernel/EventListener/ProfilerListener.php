@@ -33,7 +33,6 @@ class ProfilerListener implements EventSubscriberInterface
     protected $onlyException;
     protected $onlyMasterRequests;
     protected $exception;
-    protected $requests = array();
     protected $profiles;
     protected $requestStack;
     protected $parents;
@@ -46,7 +45,7 @@ class ProfilerListener implements EventSubscriberInterface
      * @param Boolean                 $onlyException      true if the profiler only collects data when an exception occurs, false otherwise
      * @param Boolean                 $onlyMasterRequests true if the profiler only collects data when the request is a master request, false otherwise
      */
-    public function __construct(Profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false, RequestStack $requestStack = null)
+    public function __construct(Profiler $profiler, RequestMatcherInterface $matcher = null, $onlyException = false, $onlyMasterRequests = false, RequestStack $requestStack)
     {
         $this->profiler = $profiler;
         $this->matcher = $matcher;
@@ -69,16 +68,6 @@ class ProfilerListener implements EventSubscriberInterface
         }
 
         $this->exception = $event->getException();
-    }
-
-    /**
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (null === $this->requestStack) {
-            $this->requests[] = $event->getRequest();
-        }
     }
 
     /**
@@ -111,14 +100,7 @@ class ProfilerListener implements EventSubscriberInterface
 
         $this->profiles[$request] = $profile;
 
-        if (null !== $this->requestStack) {
-            $this->parents[$request] = $this->requestStack->getParentRequest();
-        } elseif (!$master) {
-            // to be removed when requestStack is required
-            array_pop($this->requests);
-
-            $this->parents[$request] = end($this->requests);
-        }
+        $this->parents[$request] = $this->requestStack->getParentRequest();
     }
 
     public function onKernelTerminate(PostResponseEvent $event)
@@ -126,7 +108,7 @@ class ProfilerListener implements EventSubscriberInterface
         // attach children to parents
         foreach ($this->profiles as $request) {
             // isset call should be removed when requestStack is required
-            if (isset($this->parents[$request]) && null !== $parentRequest = $this->parents[$request]) {
+            if (null !== $parentRequest = $this->parents[$request]) {
                 $this->profiles[$parentRequest]->addChild($this->profiles[$request]);
             }
         }

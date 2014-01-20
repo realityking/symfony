@@ -30,11 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Initializes the context from the request and sets request attributes based on a matching route.
  *
- * This listener works in 2 modes:
- *
- *  * 2.3 compatibility mode where you must call setRequest whenever the Request changes.
- *  * 2.4+ mode where you must pass a RequestStack instance in the constructor.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class RouterListener implements EventSubscriberInterface
@@ -48,15 +43,13 @@ class RouterListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * RequestStack will become required in 3.0.
-     *
      * @param UrlMatcherInterface|RequestMatcherInterface $matcher The Url or Request matcher
      * @param RequestContext|null                         $context The RequestContext (can be null when $matcher implements RequestContextAwareInterface)
      * @param LoggerInterface|null                        $logger  The logger
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($matcher, RequestContext $context = null, LoggerInterface $logger = null, RequestStack $requestStack = null)
+    public function __construct($matcher, RequestContext $context = null, LoggerInterface $logger = null, RequestStack $requestStack)
     {
         if (!$matcher instanceof UrlMatcherInterface && !$matcher instanceof RequestMatcherInterface) {
             throw new \InvalidArgumentException('Matcher must either implement UrlMatcherInterface or RequestMatcherInterface.');
@@ -75,15 +68,9 @@ class RouterListener implements EventSubscriberInterface
     /**
      * Sets the current Request.
      *
-     * This method was used to synchronize the Request, but as the HttpKernel
-     * is doing that automatically now, you should never call it directly.
-     * It is kept public for BC with the 2.3 version.
-     *
      * @param Request|null $request A Request instance
-     *
-     * @deprecated Deprecated since version 2.4, to be moved to a private function in 3.0.
      */
-    public function setRequest(Request $request = null)
+    private function setRequest(Request $request = null)
     {
         if (null !== $request && $this->request !== $request) {
             $this->context->fromRequest($request);
