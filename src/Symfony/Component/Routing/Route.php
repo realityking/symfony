@@ -129,34 +129,6 @@ class Route implements \Serializable
     /**
      * Returns the pattern for the path.
      *
-     * @return string The pattern
-     *
-     * @deprecated Deprecated in 2.2, to be removed in 3.0. Use getPath instead.
-     */
-    public function getPattern()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Sets the pattern for the path.
-     *
-     * This method implements a fluent interface.
-     *
-     * @param string $pattern The path pattern
-     *
-     * @return Route The current Route instance
-     *
-     * @deprecated Deprecated in 2.2, to be removed in 3.0. Use setPath instead.
-     */
-    public function setPattern($pattern)
-    {
-        return $this->setPath($pattern);
-    }
-
-    /**
-     * Returns the pattern for the path.
-     *
      * @return string The path pattern
      */
     public function getPath()
