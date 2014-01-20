@@ -37,30 +37,6 @@ class JsonEncoder implements EncoderInterface, DecoderInterface
     }
 
     /**
-     * Returns the last encoding error (if any)
-     *
-     * @return integer
-     *
-     * @deprecated since 2.5, JsonEncode throws exception if an error is found, will be removed in 3.0
-     */
-    public function getLastEncodingError()
-    {
-        return $this->encodingImpl->getLastError();
-    }
-
-    /**
-     * Returns the last decoding error (if any)
-     *
-     * @return integer
-     *
-     * @deprecated since 2.5, JsonDecode throws exception if an error is found, will be removed in 3.0
-     */
-    public function getLastDecodingError()
-    {
-        return $this->decodingImpl->getLastError();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function encode($data, $format, array $context = array())
