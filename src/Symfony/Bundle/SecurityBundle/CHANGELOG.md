@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.5.0
+-----
+
+ * deprecated `Symfony\Bundle\SecurityBundle\DependencyInjection\Compiler\AddSecurityVotersPass`, use `Symfony\Component\Security\Core\DependencyInjection\AddSecurityVotersPass` instead
+
 2.4.0
 -----
 

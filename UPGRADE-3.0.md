@@ -391,6 +391,11 @@ UPGRADE FROM 2.x to 3.0
 
  * The `Resources/` directory was moved to `Core/Resources/`
 
+### SecurityBundle
+
+ * The `Symfony\Bundle\SecurityBundle\DependencyInjection\Compiler\AddSecurityVotersPass` has been renamed to
+   `Symfony\Component\Security\Core\DependencyInjection\AddSecurityVotersPass` and moved to the Security-Core component.
+
 ### Translator
 
  * The `Translator::setFallbackLocale()` method has been removed in favor of

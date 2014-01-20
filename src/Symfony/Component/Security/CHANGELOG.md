@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.5.0
+-----
+
+* Added AddSecurityVotersPass (originally in SecurityBundle)
+
 2.4.0
 -----
 
