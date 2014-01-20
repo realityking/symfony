@@ -104,34 +104,6 @@ abstract class LazyChoiceList implements ChoiceListInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForChoices(array $choices)
-    {
-        if (!$this->choiceList) {
-            $this->load();
-        }
-
-        return $this->choiceList->getIndicesForChoices($choices);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForValues(array $values)
-    {
-        if (!$this->choiceList) {
-            $this->load();
-        }
-
-        return $this->choiceList->getIndicesForValues($values);
-    }
-
-    /**
      * Loads the choice list
      *
      * Should be implemented by child classes.

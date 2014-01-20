@@ -657,17 +657,6 @@ class Form implements \IteratorAggregate, FormInterface
     }
 
     /**
-     * Alias of {@link submit()}.
-     *
-     * @deprecated Deprecated since version 2.3, to be removed in 3.0. Use
-     *             {@link submit()} instead.
-     */
-    public function bind($submittedData)
-    {
-        return $this->submit($submittedData);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function addError(FormError $error)
@@ -689,17 +678,6 @@ class Form implements \IteratorAggregate, FormInterface
      * {@inheritdoc}
      */
     public function isSubmitted()
-    {
-        return $this->submitted;
-    }
-
-    /**
-     * Alias of {@link isSubmitted()}.
-     *
-     * @deprecated Deprecated since version 2.3, to be removed in 3.0. Use
-     *             {@link isSubmitted()} instead.
-     */
-    public function isBound()
     {
         return $this->submitted;
     }

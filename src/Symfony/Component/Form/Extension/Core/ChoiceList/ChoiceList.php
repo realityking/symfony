@@ -197,58 +197,6 @@ class ChoiceList implements ChoiceListInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForChoices(array $choices)
-    {
-        $choices = $this->fixChoices($choices);
-        $indices = array();
-
-        foreach ($choices as $i => $givenChoice) {
-            foreach ($this->choices as $j => $choice) {
-                if ($choice === $givenChoice) {
-                    $indices[$i] = $j;
-                    unset($choices[$i]);
-
-                    if (0 === count($choices)) {
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        return $indices;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Deprecated since version 2.4, to be removed in 3.0.
-     */
-    public function getIndicesForValues(array $values)
-    {
-        $values = $this->fixValues($values);
-        $indices = array();
-
-        foreach ($values as $i => $givenValue) {
-            foreach ($this->values as $j => $value) {
-                if ($value === $givenValue) {
-                    $indices[$i] = $j;
-                    unset($values[$i]);
-
-                    if (0 === count($values)) {
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        return $indices;
-    }
-
-    /**
      * Recursively adds the given choices to the list.
      *
      * @param array              $bucketForPreferred The bucket where to store the preferred

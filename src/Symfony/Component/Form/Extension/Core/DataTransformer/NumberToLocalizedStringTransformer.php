@@ -72,27 +72,6 @@ class NumberToLocalizedStringTransformer implements DataTransformerInterface
      */
     const ROUND_HALF_DOWN = \NumberFormatter::ROUND_HALFDOWN;
 
-    /**
-     * Alias for {@link self::ROUND_HALF_EVEN}.
-     *
-     * @deprecated Deprecated as of Symfony 2.4, to be removed in Symfony 3.0.
-     */
-    const ROUND_HALFEVEN = self::ROUND_HALF_EVEN;
-
-    /**
-     * Alias for {@link self::ROUND_HALF_UP}.
-     *
-     * @deprecated Deprecated as of Symfony 2.4, to be removed in Symfony 3.0.
-     */
-    const ROUND_HALFUP = self::ROUND_HALF_UP;
-
-    /**
-     * Alias for {@link self::ROUND_HALF_DOWN}.
-     *
-     * @deprecated Deprecated as of Symfony 2.4, to be removed in Symfony 3.0.
-     */
-    const ROUND_HALFDOWN = self::ROUND_HALF_DOWN;
-
     protected $precision;
 
     protected $grouping;
