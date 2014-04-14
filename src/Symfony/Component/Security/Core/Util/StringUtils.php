@@ -15,6 +15,8 @@ namespace Symfony\Component\Security\Core\Util;
  * String utility functions.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @deprecated Deprecated since version 2.6, to be removed in Symfony 3.0.
  */
 class StringUtils
 {
@@ -32,6 +34,8 @@ class StringUtils
      * @param string $userInput   The string that the user can control
      *
      * @return Boolean true if the two strings are the same, false otherwise
+     *
+     * @deprecated Deprecated since version 2.6, to be removed in Symfony 3.0.
      */
     public static function equals($knownString, $userInput)
     {

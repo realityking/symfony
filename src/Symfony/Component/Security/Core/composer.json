@@ -24,7 +24,8 @@
         "symfony/http-foundation": "~2.4",
         "symfony/validator": "~2.2",
         "psr/log": "~1.0",
-        "ircmaxell/password-compat": "1.0.*"
+        "ircmaxell/password-compat": "1.0.*",
+        "realityking/hash_equals": "1.0.*"
     },
     "suggest": {
         "symfony/event-dispatcher": "",
