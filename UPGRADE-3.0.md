@@ -356,6 +356,8 @@ UPGRADE FROM 2.x to 3.0
    ```
 
  * The `RouterApacheDumperCommand` was removed.
+ 
+ * The `TemplateController` and `RedirectController` can now only be used as services.
 
 ### HttpKernel
 

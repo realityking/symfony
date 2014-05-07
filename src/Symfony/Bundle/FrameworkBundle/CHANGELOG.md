@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.6.0
+-----
+
+ * Added `template.controller` and `redirect.controller` services.
+
 2.5.0
 -----
 
